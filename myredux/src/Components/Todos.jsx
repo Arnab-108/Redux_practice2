@@ -2,15 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { TodoInput } from './TodoInput'
 import axios from "axios"
 import { useDispatch, useSelector } from 'react-redux'
-import { todoFail, todoRequest, todoSuccess } from '../redux/action'
+import { postFailure, postRequest, postSuccess, todoFail, todoRequest, todoSuccess } from '../redux/action'
 export const Todos = () => {
   const dispatch = useDispatch()
   const [state,setState] = useState()
   const {todos,isLoading} = useSelector((store)=>{
     console.log(store)
-    return store
+    return {
+      todos:store.todos,
+      isLoading:store.isLoading
+    }
   })
-
+  
   const getData=()=>{
       dispatch(todoRequest())
       axios.get("http://localhost:8080/todos").then((res)=>{
@@ -26,6 +29,23 @@ export const Todos = () => {
     getData()
   },[])
 
+  const handleAddTodo=(input)=>{
+    console.log(input)
+    const Newtodo={
+      title: input,
+      status: false
+    }
+    dispatch(postRequest())
+    axios.post("http://localhost:8080/todos",Newtodo).then((res)=>{
+      //dispatch()--request action
+      console.log(res)
+      getData()
+    }).catch((res)=>{
+      //dispatch()---failure
+      dispatch(postFailure())
+      console.log(res)
+    })
+  }
   if(isLoading){
     return (
       <h1>Loading...</h1>
@@ -33,7 +53,8 @@ export const Todos = () => {
   }
   return (
     <>
-        <TodoInput />
+        <TodoInput AddTodo={handleAddTodo} />
+        <h1>Todo List</h1>
         {
           todos?.map((el)=>(
             <>

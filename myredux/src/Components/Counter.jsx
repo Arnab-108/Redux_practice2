@@ -8,6 +8,7 @@ export const Counter = () => {
         console.log(state)
         return state.Counter
     })
+    
     const handleAdd=()=>{
         dispatch(add(1))
     }

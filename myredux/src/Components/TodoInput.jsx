@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 
-export const TodoInput = () => {
+export const TodoInput = ({AddTodo}) => {
     const [input,setInput] = useState("")
     // console.log(input)
 
     const handleAddTodo=()=>{
-        console.log(input)
+        AddTodo(input)
         setInput("")
     }
   return (
